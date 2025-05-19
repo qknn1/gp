@@ -35,7 +35,7 @@ This is a Laboratory Management System developed as a graduation project for Alm
 CREATE DATABASE lab_management;
 
 2. Update the database configuration in app.py:
-   ```py
+```py
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://username:password@localhost/lab_management'
 ```
 ### Installation Steps
