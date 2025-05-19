@@ -1,0 +1,37 @@
+<!-- templates/it/labs.html -->
+{% extends 'base.html' %}
+
+{% block title %}Labs Overview - IT Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Labs Overview</h2>
+    </div>
+    <div class="card-body">
+        {% if labs %}
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+                {% for lab in labs %}
+                    <div class="card">
+                        <div class="card-header">
+                            {{ lab.name }}
+                        </div>
+                        <div class="card-body">
+                            {% set working = lab.computers|selectattr('status', 'equalto', 'Working')|list|length %}
+                            {% set total = lab.computers|length %}
+                            
+                            <p><strong>Computers:</strong> {{ total }}</p>
+                            <p><strong>Working:</strong> {{ working }} ({{ (working / total * 100)|round|int }}%)</p>
+                            <p><strong>Not Working:</strong> {{ total - working }}</p>
+                            
+                            <a href="{{ url_for('it_lab_details', lab_id=lab.id) }}" class="btn">View Details</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No labs found in the system.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

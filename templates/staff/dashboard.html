@@ -1,0 +1,25 @@
+<!-- templates/staff/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Staff Dashboard - Lab Management{% endblock %}
+
+{% block content %}
+<h1>Labs Overview</h1>
+<p>Welcome to the Lab Management System. Select a lab to view computers and report issues.</p>
+
+<div class="card-body">
+    <div class="row">
+        {% for lab in labs %}
+            <div class="card" style="width: 300px; display: inline-block; margin-right: 20px;">
+                <div class="card-header">
+                    {{ lab.name }}
+                </div>
+                <div class="card-body">
+                    <p>Click below to view computers in this lab.</p>
+                    <a href="{{ url_for('staff_view_lab', lab_id=lab.id) }}" class="btn">View Lab</a>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

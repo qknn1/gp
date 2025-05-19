@@ -1,0 +1,62 @@
+<!-- templates/it/tickets.html -->
+{% extends 'base.html' %}
+
+{% block title %}Tickets - IT Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Ticket Management</h2>
+    </div>
+    <div class="card-body">
+        <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('it_tickets') }}?status=all" class="btn {% if current_filter == 'all' %}btn-secondary{% endif %}" style="margin-right: 10px;">All Tickets</a>
+            <a href="{{ url_for('it_tickets') }}?status=open" class="btn {% if current_filter == 'open' %}btn-secondary{% endif %}" style="margin-right: 10px;">Open Tickets</a>
+            <a href="{{ url_for('it_tickets') }}?status=closed" class="btn {% if current_filter == 'closed' %}btn-secondary{% endif %}">Closed Tickets</a>
+        </div>
+        
+        {% if tickets %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Computer</th>
+                        <th>Issue</th>
+                        <th>Status</th>
+                        <th>Reported By</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>#{{ ticket.id }}</td>
+                        <td>{{ ticket.computer.pc_id }} ({{ ticket.computer.lab.name }})</td>
+                        <td>{{ ticket.issue }}</td>
+                        <td>
+                            {% if ticket.status == 'Open' %}
+                                <span class="badge badge-warning">Open</span>
+                            {% else %}
+                                <span class="badge badge-success">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ticket.reporter.username }}</td>
+                        <td>{{ ticket.reported_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            {% if ticket.status == 'Open' %}
+                                <a href="{{ url_for('resolve_ticket', ticket_id=ticket.id) }}" class="btn">Resolve</a>
+                            {% else %}
+                                <span>Resolved on {{ ticket.closed_date.strftime('%Y-%m-%d') }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tickets found with the selected filter.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

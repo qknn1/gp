@@ -1,0 +1,39 @@
+<!-- templates/it/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}IT Dashboard - Lab Management{% endblock %}
+
+{% block content %}
+<h1>IT Dashboard</h1>
+<p>Welcome to the IT Team dashboard. Monitor system status and manage tickets.</p>
+
+<div class="stats-container">
+    <div class="stat-card">
+        <h3>Open Tickets</h3>
+        <div class="count">{{ open_tickets }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Closed Tickets</h3>
+        <div class="count">{{ closed_tickets }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Total Computers</h3>
+        <div class="count">{{ total_computers }}</div>
+    </div>
+    <div class="stat-card">
+        <h3>Working Computers</h3>
+        <div class="count">{{ working_computers }}</div>
+        <div>{{ (working_computers / total_computers * 100)|round|int }}% operational</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Quick Links</h2>
+    </div>
+    <div class="card-body">
+        <a href="{{ url_for('it_tickets') }}?status=open" class="btn" style="margin-right: 10px;">View Open Tickets</a>
+        <a href="{{ url_for('it_labs') }}" class="btn" style="margin-right: 10px;">Manage Labs</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,102 @@
+<!-- templates/it/lab_details.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ lab.name }} Details - IT Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ lab.name }} - Computers</h2>
+    </div>
+    <div class="card-body">
+        {% if computers %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>PC ID</th>
+                        <th>Specifications</th>
+                        <th>Status</th>
+                        <th>Active Tickets</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for computer in computers %}
+                    <tr>
+                        <td>{{ computer.pc_id }}</td>
+                        <td>{{ computer.specs }}</td>
+                        <td>
+                            {% if computer.status == 'Working' %}
+                                <span class="badge badge-success">Working</span>
+                            {% else %}
+                                <span class="badge badge-danger">Not Working</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% set open_tickets = computer.tickets|selectattr('status', 'equalto', 'Open')|list|length %}
+                            {% if open_tickets > 0 %}
+                                <span class="badge badge-warning">{{ open_tickets }} open</span>
+                            {% else %}
+                                <span class="badge badge-success">None</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No computers found in this lab.</p>
+        {% endif %}
+        
+        <a href="{{ url_for('it_labs') }}" class="btn btn-secondary">Back to Labs</a>
+    </div>
+</div>
+
+{% if computers %}
+<div class="card">
+    <div class="card-header">
+        <h2>Recent Tickets in {{ lab.name }}</h2>
+    </div>
+    <div class="card-body">
+        {% set lab_tickets = [] %}
+        {% for computer in computers %}
+            {% for ticket in computer.tickets %}
+                {% if ticket.status == 'Open' %}
+                    {% set _ = lab_tickets.append(ticket) %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+        
+        {% if lab_tickets %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Computer</th>
+                        <th>Issue</th>
+                        <th>Reported By</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in lab_tickets %}
+                    <tr>
+                        <td>#{{ ticket.id }}</td>
+                        <td>{{ ticket.computer.pc_id }}</td>
+                        <td>{{ ticket.issue }}</td>
+                        <td>{{ ticket.reporter.username }}</td>
+                        <td>{{ ticket.reported_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>
+                            <a href="{{ url_for('resolve_ticket', ticket_id=ticket.id) }}" class="btn">Resolve</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No open tickets for this lab.</p>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %}

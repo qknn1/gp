@@ -1,0 +1,46 @@
+<!-- templates/staff/lab_details.html -->
+{% extends 'base.html' %}
+
+{% block title %}{{ lab.name }} - Lab Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>{{ lab.name }}</h2>
+    </div>
+    <div class="card-body">
+        <h3>Computers in this Lab</h3>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>PC ID</th>
+                    <th>Specifications</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for computer in computers %}
+                <tr>
+                    <td>{{ computer.pc_id }}</td>
+                    <td>{{ computer.specs }}</td>
+                    <td>
+                        {% if computer.status == 'Working' %}
+                            <span class="badge badge-success">Working</span>
+                        {% else %}
+                            <span class="badge badge-danger">Not Working</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{{ url_for('create_ticket', computer_id=computer.id) }}" class="btn">Report Issue</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <a href="{{ url_for('staff_dashboard') }}" class="btn btn-secondary">Back to Labs</a>
+    </div>
+</div>
+{% endblock %}

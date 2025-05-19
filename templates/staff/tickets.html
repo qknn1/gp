@@ -1,0 +1,50 @@
+<!-- templates/staff/tickets.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Tickets - Lab Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>My Reported Issues</h2>
+    </div>
+    <div class="card-body">
+        {% if tickets %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ticket ID</th>
+                        <th>Computer</th>
+                        <th>Issue</th>
+                        <th>Status</th>
+                        <th>Reported Date</th>
+                        <th>Resolution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ticket in tickets %}
+                    <tr>
+                        <td>#{{ ticket.id }}</td>
+                        <td>{{ ticket.computer.pc_id }} ({{ ticket.computer.lab.name }})</td>
+                        <td>{{ ticket.issue }}</td>
+                        <td>
+                            {% if ticket.status == 'Open' %}
+                                <span class="badge badge-warning">Open</span>
+                            {% else %}
+                                <span class="badge badge-success">Closed</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ ticket.reported_date.strftime('%Y-%m-%d %H:%M') }}</td>
+                        <td>{{ ticket.resolution or '-' }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>You haven't reported any issues yet.</p>
+        {% endif %}
+        
+        <a href="{{ url_for('staff_dashboard') }}" class="btn">Back to Labs</a>
+    </div>
+</div>
+{% endblock %}

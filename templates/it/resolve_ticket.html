@@ -1,0 +1,31 @@
+<!-- templates/it/resolve_ticket.html -->
+{% extends 'base.html' %}
+
+{% block title %}Resolve Ticket - IT Management{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Resolve Ticket #{{ ticket.id }}</h2>
+    </div>
+
+    <div class="card-body">
+        <div style="margin-bottom: 20px;">
+            <p><strong>Computer:</strong> {{ ticket.computer.pc_id }} ({{ ticket.computer.lab.name }})</p>
+            <p><strong>Reported By:</strong> {{ ticket.reporter.username }}</p>
+            <p><strong>Date Reported:</strong> {{ ticket.reported_date.strftime('%Y-%m-%d %H:%M') }}</p>
+            <p><strong>Issue:</strong> {{ ticket.issue }}</p>
+        </div>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="resolution">Resolution:</label>
+                <textarea id="resolution" name="resolution" class="form-control" rows="5" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn">Mark as Resolved</button>
+            <a href="{{ url_for('it_tickets') }}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
